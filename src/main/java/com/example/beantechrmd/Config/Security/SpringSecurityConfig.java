@@ -1,7 +1,7 @@
-package com.example.beantechrmd.Config;
+package com.example.beantechrmd.Config.Security;
 
-import com.example.beantechrmd.Jwt.AuthTokenFilter;
-import com.example.beantechrmd.Service.UserDetailsServiceImpl;
+import com.example.beantechrmd.Config.Security.Jwt.AuthTokenFilter;
+import com.example.beantechrmd.Config.Security.Service.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -19,20 +19,14 @@ import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 
+//@EnableWebSecurity
 @AllArgsConstructor
 @Configuration
-@EnableMethodSecurity
-//(securedEnabled = true,
-//jsr250Enabled = true,
-//prePostEnabled = true) // by default
+@EnableMethodSecurity //securedEnabled = true , prePostEnabled = true
 public class SpringSecurityConfig {
 
         UserDetailsServiceImpl userDetailsService;
 
-         /* DOPO
-        @Autowired
-        private AuthEntryPointJwt unauthorizedHandler;
-        */
 
         @Bean
         public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -67,9 +61,7 @@ public class SpringSecurityConfig {
             http
                     .authorizeHttpRequests(auth -> auth
                           .requestMatchers(PathRequest.toH2Console()).permitAll()
-                          .requestMatchers(mvcMatcherBuilder.pattern("/public/**")).permitAll()
-                          .requestMatchers(mvcMatcherBuilder.pattern("/user/**")).hasAnyRole("USER", "ADMIN")
-                          .requestMatchers(mvcMatcherBuilder.pattern("/admin/**")).hasRole("ADMIN")
+                          .requestMatchers(mvcMatcherBuilder.pattern("/auth/**")).permitAll()
                           .anyRequest().authenticated()
                   );
 

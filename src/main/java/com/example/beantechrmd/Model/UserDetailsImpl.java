@@ -1,11 +1,11 @@
-package com.example.beantechrmd.Models;
+package com.example.beantechrmd.Model;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.example.beantechrmd.Entities.UserApp;
+import com.example.beantechrmd.Entity.UserApp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,6 +61,7 @@ public class UserDetailsImpl implements UserDetails {
         return username;
     }
 
+    //Non implementiamo tutti i metodi di stato dell'accounting
     @Override
     public boolean isAccountNonExpired() {
         return true;

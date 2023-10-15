@@ -1,8 +1,8 @@
-package com.example.beantechrmd.Service;
+package com.example.beantechrmd.Config.Security.Service;
 
-import com.example.beantechrmd.Entities.UserApp;
-import com.example.beantechrmd.Models.UserDetailsImpl;
-import com.example.beantechrmd.Repositories.UserAppRepository;
+import com.example.beantechrmd.Entity.UserApp;
+import com.example.beantechrmd.Model.UserDetailsImpl;
+import com.example.beantechrmd.Repository.UserAppRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

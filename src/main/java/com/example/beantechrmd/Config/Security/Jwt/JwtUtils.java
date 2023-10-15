@@ -1,9 +1,9 @@
-package com.example.beantechrmd.Jwt;
+package com.example.beantechrmd.Config.Security.Jwt;
 
 import java.security.Key;
 import java.util.Date;
 
-import com.example.beantechrmd.Models.UserDetailsImpl;
+import com.example.beantechrmd.Model.UserDetailsImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 

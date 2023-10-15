@@ -1,6 +1,6 @@
-package com.example.beantechrmd.Entities;
+package com.example.beantechrmd.Entity;
 
-import com.example.beantechrmd.Models.EnumRole;
+import com.example.beantechrmd.Model.EnumRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,8 +1,8 @@
-package com.example.beantechrmd.Jwt;
+package com.example.beantechrmd.Config.Security.Jwt;
 
 import java.io.IOException;
 
-import com.example.beantechrmd.Service.UserDetailsServiceImpl;
+import com.example.beantechrmd.Config.Security.Service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
