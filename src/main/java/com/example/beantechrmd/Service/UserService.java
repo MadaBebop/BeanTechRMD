@@ -1,20 +1,37 @@
 package com.example.beantechrmd.Service;
 
-import com.example.beantechrmd.Entity.Role;
+import com.example.beantechrmd.Config.Security.Jwt.JwtUtils;
 import com.example.beantechrmd.Entity.UserApp;
-import com.example.beantechrmd.Pojo.Responses.UserAppInfoResponse;
 import com.example.beantechrmd.Repository.UserAppRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 public class UserService {
 
     UserAppRepository userAppRepository;
+    JwtUtils jwtUtils;
 
+
+    public UserApp getUserByToken (HttpServletRequest request) {
+        String jwt = jwtUtils.getJwtFromCookies(request);
+        Optional<UserApp> userToFind;
+
+        if(jwtUtils.validateJwtToken(jwt)) {  //Token valido?
+            userToFind = userAppRepository.findByUsername(jwtUtils.getUserNameFromJwtToken(jwt));
+            return userToFind.orElse(null);
+        }else{
+            return null;
+        }
+    }
+
+}
+
+    /*
     //Visualizzare se stessò
     public UserAppInfoResponse getUserAppById(Integer id) {
         if(id == null) throw new IllegalArgumentException("id non può essere nullo");
@@ -33,8 +50,6 @@ public class UserService {
 
         return response;
     }
+   PROBLEMA DI SICUREZZA LEGATA AL INPUT: ID
+     */
 
-    //Modificarsi
-
-
-}

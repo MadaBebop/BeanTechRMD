@@ -1,5 +1,6 @@
 package com.example.beantechrmd.Config.Security.Service;
 
+import com.example.beantechrmd.Config.Security.Jwt.JwtUtils;
 import com.example.beantechrmd.Entity.UserApp;
 import com.example.beantechrmd.Model.UserDetailsImpl;
 import com.example.beantechrmd.Repository.UserAppRepository;
@@ -27,4 +28,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return UserDetailsImpl.build(user);
     }
+
 }

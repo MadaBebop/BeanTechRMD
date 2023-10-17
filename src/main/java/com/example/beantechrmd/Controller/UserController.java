@@ -1,7 +1,10 @@
 package com.example.beantechrmd.Controller;
 
+import com.example.beantechrmd.Entity.Role;
+import com.example.beantechrmd.Entity.UserApp;
 import com.example.beantechrmd.Pojo.Responses.UserAppInfoResponse;
 import com.example.beantechrmd.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +29,18 @@ public class UserController {
     UserService userService;
 
     //Visualizzare se stessò
-    @GetMapping("/visualizza/{id}")
-    public UserAppInfoResponse getProfile(@PathVariable int id) {
-        return userService.getUserAppById(id);
-        //Non ho avuto tempo di usare thymeleaf
-        //Avrei potuto semplicemente ritornare un Model con un attributo-> UserApp pojo
+    @GetMapping("/api/profile")
+    public UserAppInfoResponse getProfileName(HttpServletRequest request) {
+        UserApp userFound = userService.getUserByToken(request);
+
+        return new UserAppInfoResponse(
+                userFound.getId(),
+                userFound.getUsername(),
+                userFound.getRoles().stream()
+                        .map(Role::toString)
+                        .toList()
+        );
     }
 
-    //Modificarsi
-    @PutMapping
-    public String modifyProfile(){
-        return "";
-    }
 
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+<head>
+    <title>Logout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #789cab;
+            background-size: cover;
+            text-align: center;
+            color: white;
+        }
+
+        h2 {
+            color: #5c433c;
+        }
+
+        form {
+            outline-style: solid;
+            width: 300px;
+            margin: 0 auto;
+            background-color: #fa6424;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="submit"] {
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+<h2>Logout</h2>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout">
+</form>
+</body>
+</html>

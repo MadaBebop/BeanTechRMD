@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin("*")
-@RequestMapping("/mod")
+@RequestMapping("/api/mod")
 @RestController
 @PreAuthorize("hasRole('MODERATOR')")
 public class ModeratorController {

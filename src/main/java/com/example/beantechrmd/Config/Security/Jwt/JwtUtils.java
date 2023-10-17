@@ -28,13 +28,25 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("BeanTech")
+    @Value("UniUd")
     private String jwtCookieName;
     @Value("1000000")
     private int jwtExpirationMs;
     @Value("HotSecretStuff")
     private String jwtSecret;
 
+    //Creazione JWT
+    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
+        String jwt = generateTokenFromUsername(userPrincipal.getUsername());
+        return ResponseCookie.from(jwtCookieName, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
+    }
+
+    //Pulizia JWT
+    public ResponseCookie getCleanJwtCookie() {
+        return ResponseCookie.from(jwtCookieName, null).path("/api").build();
+    }
+
+    //Raccolta JWT
     public String getJwtFromCookies(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, jwtCookieName);
         if (cookie != null) {
@@ -44,24 +56,23 @@ public class JwtUtils {
         }
     }
 
-    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
-        String jwt = generateTokenFromUsername(userPrincipal.getUsername());
-        return ResponseCookie.from(jwtCookieName, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
-    }
-
-    public ResponseCookie getCleanJwtCookie() {
-        return ResponseCookie.from(jwtCookieName, null).path("/api").build();
-    }
-
+    //Prendere il nome utente dal JWT
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key()).build()
-                .parseClaimsJws(token).getBody().getSubject();
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(key())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
+    //Decodifica JWT
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
+    //Creazione token
     public String generateTokenFromUsername(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -71,6 +82,7 @@ public class JwtUtils {
                 .compact();
     }
 
+    //Validazione token
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
