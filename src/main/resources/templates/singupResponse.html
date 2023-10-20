@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrazione Utente Avvenuta con Successo</title>
+</head>
+<body>
+<div th:if="${user != null}">
+    <h1>Registrazione Utente Avvenuta con Successo</h1>
+    <p>Congratulazioni, l'utente<span th:text="${user.username}"></span> è stato registrato con successo!</p>
+</div>
+<div th:unless="${user != null}">
+    <h1>Registrazione Utente Fallita</h1>
+    <p>La registrazione utente <span th:text="${user.username}"></span>non è avvenuta con successo. Si prega di riprovare.</p>
+</div>
+</body>
+</html>

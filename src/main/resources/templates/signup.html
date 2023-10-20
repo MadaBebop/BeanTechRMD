@@ -55,12 +55,12 @@
 </head>
   <body>
     <h2>Registrazione</h2>
-      <form th:action="@{/signup}" th:object="${signUpRequest}" method="post">
+      <form th:action="@{/auth/signup}" th:object="${user}" method="post">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" th:field="${signUpRequest.username}" required><br>
+        <input type="text" id="username" name="username" th:field="*{username}" required><br>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" th:field="${signUpRequest.password}" required><br>
+        <input type="password" id="password" name="password" th:field="*{password}" required><br>
 
         <label for="confirmPassword">Conferma Password:</label>
          <input type="password" id="confirmPassword" name="confirmPassword" required><br>
@@ -69,7 +69,3 @@
     </form>
   </body>
 </html>
-
-<!-- Questa è una pagina di registrazione simile a quella di login, ma con un campo aggiuntivo per
-confermare la password. Assicurati di mappare l'azione del modulo (@{/singup}) a un controller
-Spring MVC per gestire la registrazione degli utenti. -->

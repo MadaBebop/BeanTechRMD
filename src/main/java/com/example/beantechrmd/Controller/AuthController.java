@@ -27,13 +27,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api")
-@PreAuthorize("permitAll()")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     UserAppRepository userRepository;
@@ -43,7 +43,12 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
 
-    //login
+    //LOGIN -----------------------------------------------------------------------------------------------------------
+    @GetMapping("/login")
+    public String getLogin(Model model) {
+        return "login";
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -74,12 +79,18 @@ public class AuthController {
     }
 
 
-    //Iscrizione
+    //SIGNUP -----------------------------------------------------------------------------------------------------------
+    @GetMapping("/signup")
+    public String getSignup(Model model) {
+        return "signup";
+    }
+
     @PostMapping("/signup")
-    public UserAppInfoResponse registerUser(@ModelAttribute @Valid SignupRequest signUpRequest) {
+    public String registerUser(@ModelAttribute("user") @Valid SignupRequest signUpRequest, Model model) {
         //Controllo esistenza dell'utente
         if (userRepository.existsByUsername(signUpRequest.username())) {
-            return null;
+            model.addAttribute(signUpRequest);
+            return "signupResponse";
         }
 
         // Nuovo utente: name + password
@@ -137,11 +148,17 @@ public class AuthController {
                 roles.stream().map(Role::toString).toList()
         );
 
-        return userAppInfoResponse;
+        model.addAttribute(userAppInfoResponse);
+        return "signupResponse";
     }
 
 
-    //Logout
+    //LOGOUT -----------------------------------------------------------------------------------------------------------
+    @GetMapping("/logout")
+    public String getLogout(Model model) {
+        return "logout";
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<?> logoutUser() {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();

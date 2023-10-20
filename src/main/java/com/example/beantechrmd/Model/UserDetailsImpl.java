@@ -16,9 +16,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /*
-    Lo userDetails può fornirci solo alcune informazioni in merito allo user, se vogliamo invece
+    Lo userDetails standard può fornirci solo alcune informazioni in merito allo user, se vogliamo invece
     ottenerne una maggior varietà(Es. email, id o con altri fields che si possono aggiungere in seguito)
-    dobbiamo creare una implementazione del userDetails
+    dobbiamo creare una implementazione del userDetails.
+    In questa classe stiamo essenzialmente definendo un oggetto della security.
  */
 
 @Data
@@ -35,7 +36,7 @@ public class UserDetailsImpl implements UserDetails {
     //Conversione UserApp -> UserDetails implementato
     public static UserDetailsImpl build(UserApp user) {
 
-        //Conversione del Set<Role> -> List<GrantedAuthority> per poter lavorare con l'oggetto security
+        //Conversione del Set<Role> -> List<GrantedAuthority> per poter lavorare con l'oggetto autorità security
         List<GrantedAuthority> authorities = user.getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getAuthority().name()))

@@ -21,7 +21,7 @@ controllerUser: dovrebbe permettere allo user di vedere e modificare SOLO il pro
 
 @AllArgsConstructor
 @CrossOrigin("*")
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RestController
 @PreAuthorize("hasAnyRole()")
 public class UserController {
@@ -29,7 +29,7 @@ public class UserController {
     UserService userService;
 
     //Visualizzare se stessò
-    @GetMapping("/api/profile")
+    @GetMapping("/profile")
     public UserAppInfoResponse getProfileName(HttpServletRequest request) {
         UserApp userFound = userService.getUserByToken(request);
 
