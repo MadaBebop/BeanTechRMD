@@ -10,7 +10,7 @@ import com.example.beantechrmd.Entity.UserApp;
 import com.example.beantechrmd.Model.EnumRole;
 import com.example.beantechrmd.Model.UserDetailsImpl;
 import com.example.beantechrmd.Pojo.Requests.LoginRequest;
-import com.example.beantechrmd.Pojo.Requests.SingupRequest;
+import com.example.beantechrmd.Pojo.Requests.SignupRequest;
 import com.example.beantechrmd.Pojo.Responses.MessageResponse;
 import com.example.beantechrmd.Pojo.Responses.UserAppInfoResponse;
 import com.example.beantechrmd.Repository.RoleRepository;
@@ -20,22 +20,20 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
+@PreAuthorize("permitAll()")
 public class AuthController {
 
     UserAppRepository userRepository;
@@ -46,7 +44,7 @@ public class AuthController {
 
 
     //login
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -78,14 +76,13 @@ public class AuthController {
 
     //Iscrizione
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SingupRequest signUpRequest) {
-
+    public UserAppInfoResponse registerUser(@ModelAttribute @Valid SignupRequest signUpRequest) {
         //Controllo esistenza dell'utente
         if (userRepository.existsByUsername(signUpRequest.username())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Nome utente già utilizzato!"));
+            return null;
         }
 
-        // Nuovo utente
+        // Nuovo utente: name + password
         UserApp newUserToCreate = new UserApp(
                 signUpRequest.username(),
                 encoder.encode(signUpRequest.password())
@@ -102,7 +99,10 @@ public class AuthController {
             Per il controllo del ruolo dell'utente, sarebbe meglio spostare la logica in un service,
             ma per mancanza di tempo la metto nel controller
          */
+
+        //Ruolo del nuovo user da definire
         if (strRoles == null) {
+            //Se non è presente la definizione del genere di user lo si crea di default "role_user"
             Role userRole = roleRepository.findByAuthority(EnumRole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException(errorMessage));
             roles.add(userRole);
@@ -115,7 +115,7 @@ public class AuthController {
                         roles.add(adminRole);
                         break;
 
-                    case "manager":
+                    case "moderator":
                         Role managerRole = roleRepository.findByAuthority(EnumRole.ROLE_MODERATOR)
                                 .orElseThrow(() -> new RuntimeException(errorMessage));
                         roles.add(managerRole);
@@ -128,16 +128,21 @@ public class AuthController {
                 }
             });
         }
-
         newUserToCreate.setRoles(roles);
         userRepository.save(newUserToCreate);
 
-        return ResponseEntity.ok(new MessageResponse("Utente creato con successo!"));
+        UserAppInfoResponse userAppInfoResponse = new UserAppInfoResponse(
+                newUserToCreate.getId(),
+                newUserToCreate.getUsername(),
+                roles.stream().map(Role::toString).toList()
+        );
+
+        return userAppInfoResponse;
     }
 
 
     //Logout
-    @PostMapping("/signout")
+    @PostMapping("/logout")
     public ResponseEntity<?> logoutUser() {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
